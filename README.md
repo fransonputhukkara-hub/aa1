@@ -59,3 +59,4 @@ Add images to `public/sarees/` and point `image` at `/sarees/your-file.jpg`.
 - Wire to **Firebase** (Firestore products + Auth) to match your StitchBill setup.
 - Add a **product detail page** + filter (Cotton / Soft Silk / All) via React Router.
 - Hook checkout to a payment gateway (Razorpay / Cashfree) or WhatsApp order links.
+"# aa1" 

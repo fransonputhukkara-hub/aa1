@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
-import { products } from '../data/products';
+import { useProducts } from '../lib/useProducts';
 import type { SareeType } from '../types';
 
 type FilterKey = 'all' | 'cotton' | 'silk';
@@ -13,6 +13,7 @@ const FILTERS: { key: FilterKey; label: string; type?: SareeType }[] = [
 
 export default function Shop() {
   const [params, setParams] = useSearchParams();
+  const { products, loading } = useProducts();
   const active = (params.get('type') as FilterKey) || 'all';
   const current = FILTERS.find((f) => f.key === active) ?? FILTERS[0];
 
@@ -49,14 +50,22 @@ export default function Shop() {
         </div>
 
         <p className="text-center text-[12px] tracking-[0.12em] uppercase text-ink-soft mb-8">
-          {list.length} {list.length === 1 ? 'saree' : 'sarees'}
+          {loading ? 'Loading...' : `${list.length} ${list.length === 1 ? 'saree' : 'sarees'}`}
         </p>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-[26px]">
-          {list.map((p, i) => (
-            <ProductCard key={p.id} product={p} index={i} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-[26px]">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="aspect-[3/4] bg-wine/5 rounded animate-pulse" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-[26px]">
+            {list.map((p, i) => (
+              <ProductCard key={p.id} product={p} index={i} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

@@ -6,13 +6,14 @@ import { useCart } from '../context/CartContext';
 import { formatINR } from '../lib/format';
 import { description, specs } from '../lib/productInfo';
 import { singleItemMessage, whatsappUrl } from '../lib/whatsapp';
-import { products } from '../data/products';
+import { useProducts } from '../lib/useProducts';
 
 export default function ProductDetail() {
   const { id } = useParams();
   const { add } = useCart();
   const navigate = useNavigate();
   const [qty, setQty] = useState(1);
+  const { products } = useProducts();
 
   const product = products.find((p) => p.id === Number(id));
 
@@ -26,7 +27,11 @@ export default function ProductDetail() {
   }
 
   const discount = product.mrp ? Math.round((1 - product.price / product.mrp) * 100) : 0;
-  const related = products.filter((p) => p.type === product.type && p.id !== product.id).slice(0, 4);
+  if (!product && products.length === 0) {
+    return <div className="max-w-[1280px] mx-auto px-5 py-32 text-center text-ink-soft">Loading...</div>;
+  }
+
+  const related = products.filter((p) => p.type === product?.type && p.id !== product?.id).slice(0, 4);
 
   return (
     <div className="max-w-[1280px] mx-auto px-5 sm:px-7 py-8 sm:py-12">

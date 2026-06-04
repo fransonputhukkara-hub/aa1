@@ -11,6 +11,7 @@ interface CartContextValue {
   add: (product: Product, qty?: number) => void;
   changeQty: (id: number, delta: number) => void;
   remove: (id: number) => void;
+  clearCart: () => void;
   openCart: () => void;
   closeCart: () => void;
 }
@@ -51,6 +52,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((prev) => prev.filter((i) => i.id !== id));
   }, []);
 
+  const clearCart = useCallback(() => setItems([]), []);
+
   const count = useMemo(() => items.reduce((s, i) => s + i.qty, 0), [items]);
   const subtotal = useMemo(() => items.reduce((s, i) => s + i.price * i.qty, 0), [items]);
 
@@ -63,6 +66,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     add,
     changeQty,
     remove,
+    clearCart,
     openCart: () => setOpen(true),
     closeCart: () => setOpen(false),
   };

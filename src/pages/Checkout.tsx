@@ -30,7 +30,7 @@ const STATES = [
 ];
 
 export default function Checkout() {
-  const { items, subtotal } = useCart();
+  const { items, subtotal, clearCart } = useCart();
   const navigate = useNavigate();
   const [addr, setAddr] = useState<Address>(EMPTY);
   const [orderOpen, setOrderOpen] = useState(true);
@@ -83,6 +83,7 @@ export default function Checkout() {
     ].filter(Boolean).join('\n');
 
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+    clearCart();
     navigate('/');
   };
 

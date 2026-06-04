@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Reveal from './Reveal';
 
 const STORY_IMAGE = '/sarees/cotton-05.jpg';
@@ -10,7 +11,7 @@ const STATS = [
 
 export default function StorySplit() {
   return (
-    <section id="story" className="bg-ivory py-16 sm:py-[90px]">
+    <section id="story" className="bg-ivory py-16 sm:py-[90px] scroll-mt-20">
       <div className="max-w-[1280px] mx-auto px-5 sm:px-7 grid lg:grid-cols-[1.05fr_1fr] items-center gap-10 lg:gap-[70px]">
         <Reveal className="aspect-[4/5] rounded overflow-hidden relative bg-wine">
           <img src={STORY_IMAGE} alt="A Sanskriti weave" className="w-full h-full object-cover object-[center_35%]" />
@@ -38,9 +39,9 @@ export default function StorySplit() {
               </div>
             ))}
           </div>
-          <a href="#silk" className="btn btn-gold">
+          <Link to="/shop?type=silk" className="btn btn-gold">
             See the soft silk edit
-          </a>
+          </Link>
         </Reveal>
       </div>
     </section>

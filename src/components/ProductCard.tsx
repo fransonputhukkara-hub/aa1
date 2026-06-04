@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { formatINR } from '../lib/format';
 import type { Product } from '../types';
@@ -9,7 +10,7 @@ export default function ProductCard({ product, index }: { product: Product; inde
   const fb = FALLBACKS[index % FALLBACKS.length];
 
   return (
-    <div className="group cursor-pointer">
+    <Link to={`/product/${product.id}`} className="group block cursor-pointer">
       <div className={`relative aspect-[3/4] rounded overflow-hidden mb-3.5 ${fb}`}>
         {product.isNew && (
           <span className="absolute top-3 left-3 z-[3] bg-white text-wine-deep text-[9px] tracking-[0.18em] uppercase px-2.5 py-[5px] rounded-sm font-semibold">
@@ -24,6 +25,7 @@ export default function ProductCard({ product, index }: { product: Product; inde
         />
         <button
           onClick={(e) => {
+            e.preventDefault();
             e.stopPropagation();
             add(product);
           }}
@@ -36,10 +38,8 @@ export default function ProductCard({ product, index }: { product: Product; inde
       <h3 className="text-[20px] font-medium leading-tight">{product.name}</h3>
       <div className="flex items-center gap-2.5 mt-1.5">
         <span className="text-[15px] font-medium text-ink">{formatINR(product.price)}</span>
-        {product.mrp && (
-          <span className="text-[12.5px] text-ink-soft line-through">{formatINR(product.mrp)}</span>
-        )}
+        {product.mrp && <span className="text-[12.5px] text-ink-soft line-through">{formatINR(product.mrp)}</span>}
       </div>
-    </div>
+    </Link>
   );
 }

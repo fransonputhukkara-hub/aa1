@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Menu, Search, ShoppingBag, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 const NAV = [
-  { label: 'Kalyani Cotton', href: '#shop' },
-  { label: 'Soft Silk', href: '#silk' },
-  { label: 'Collections', href: '#cats' },
-  { label: 'Our Story', href: '#story' },
+  { label: 'Shop All', to: '/shop' },
+  { label: 'Kalyani Cotton', to: '/shop?type=cotton' },
+  { label: 'Soft Silk', to: '/shop?type=silk' },
+  { label: 'Our Story', to: '/#story' },
 ];
 
 export default function Header() {
@@ -30,22 +31,22 @@ export default function Header() {
           <Menu size={22} strokeWidth={1.6} />
         </button>
 
-        <a href="#" className="font-serif text-[27px] font-semibold leading-none tracking-wide">
+        <Link to="/" className="font-serif text-[27px] font-semibold leading-none tracking-wide">
           Sanskriti
           <span className="block font-sans text-[9px] tracking-[0.5em] text-gold uppercase mt-[3px] font-medium">
             Silks · Est. 1974
           </span>
-        </a>
+        </Link>
 
         <nav className="hidden md:flex gap-8 text-[12.5px] tracking-[0.14em] uppercase">
           {NAV.map((n) => (
-            <a
+            <Link
               key={n.label}
-              href={n.href}
+              to={n.to}
               className="relative py-1 text-ink-soft transition-colors hover:text-wine after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-0 after:bg-wine after:transition-all hover:after:w-full"
             >
               {n.label}
-            </a>
+            </Link>
           ))}
         </nav>
 

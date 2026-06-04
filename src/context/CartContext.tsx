@@ -8,7 +8,7 @@ interface CartContextValue {
   count: number;
   subtotal: number;
   toast: string | null;
-  add: (product: Product) => void;
+  add: (product: Product, qty?: number) => void;
   changeQty: (id: number, delta: number) => void;
   remove: (id: number) => void;
   openCart: () => void;
@@ -29,11 +29,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const add = useCallback(
-    (product: Product) => {
+    (product: Product, qty: number = 1) => {
       setItems((prev) => {
         const existing = prev.find((i) => i.id === product.id);
-        if (existing) return prev.map((i) => (i.id === product.id ? { ...i, qty: i.qty + 1 } : i));
-        return [...prev, { ...product, qty: 1 }];
+        if (existing)
+          return prev.map((i) => (i.id === product.id ? { ...i, qty: i.qty + qty } : i));
+        return [...prev, { ...product, qty }];
       });
       notify(`${product.name} added to your bag`);
     },
@@ -42,9 +43,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const changeQty = useCallback((id: number, delta: number) => {
     setItems((prev) =>
-      prev
-        .map((i) => (i.id === id ? { ...i, qty: i.qty + delta } : i))
-        .filter((i) => i.qty > 0),
+      prev.map((i) => (i.id === id ? { ...i, qty: i.qty + delta } : i)).filter((i) => i.qty > 0),
     );
   }, []);
 

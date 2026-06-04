@@ -1,18 +1,19 @@
+import { Link } from 'react-router-dom';
 import Reveal from './Reveal';
 
 interface Tile {
   span: string;
   fallback: string;
   image: string;
-  href: string;
+  to: string;
   label: string;
   title: string;
 }
 
 const TILES: Tile[] = [
-  { span: 'sm:row-span-2 sm:aspect-auto', fallback: 'silk', image: '/sarees/cotton-03.jpg', href: '#shop', label: 'Contrast borders', title: 'Korvai Classics' },
-  { span: '', fallback: 's2', image: '/sarees/silk-02.jpg', href: '#silk', label: 'Lustrous weaves', title: 'Soft Silk Edit' },
-  { span: '', fallback: 's3', image: '/sarees/cotton-15.jpg', href: '#shop', label: 'Soft & subtle', title: 'Daily Drapes' },
+  { span: 'sm:row-span-2 sm:aspect-auto', fallback: 'silk', image: '/sarees/cotton-03.jpg', to: '/shop?type=cotton', label: 'Contrast borders', title: 'Korvai Classics' },
+  { span: '', fallback: 's2', image: '/sarees/silk-02.jpg', to: '/shop?type=silk', label: 'Lustrous weaves', title: 'Soft Silk Edit' },
+  { span: '', fallback: 's3', image: '/sarees/cotton-15.jpg', to: '/shop?type=cotton', label: 'Soft & subtle', title: 'Daily Drapes' },
 ];
 
 export default function Categories() {
@@ -31,11 +32,7 @@ export default function Categories() {
 
         <Reveal className="grid grid-cols-1 sm:grid-cols-3 gap-[18px]">
           {TILES.map((t) => (
-            <a
-              key={t.title}
-              href={t.href}
-              className={`group relative rounded overflow-hidden aspect-[3/4] cursor-pointer ${t.span}`}
-            >
+            <Link key={t.title} to={t.to} className={`group relative rounded overflow-hidden aspect-[3/4] cursor-pointer ${t.span}`}>
               <div className={`absolute inset-0 ${t.fallback}`}>
                 <img
                   src={t.image}
@@ -48,7 +45,7 @@ export default function Categories() {
                 <span className="text-[11px] tracking-[0.25em] uppercase text-gold-soft block">{t.label}</span>
                 <h3 className="text-[25px] font-medium leading-none mt-1.5">{t.title}</h3>
               </div>
-            </a>
+            </Link>
           ))}
         </Reveal>
       </div>

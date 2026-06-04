@@ -1,17 +1,29 @@
+import { Link } from 'react-router-dom';
 import Reveal from './Reveal';
 import ProductCard from './ProductCard';
 import type { Product } from '../types';
 
 interface ProductGridProps {
-  id: string;
+  id?: string;
   eyebrow: string;
   title: string;
   description: string;
   products: Product[];
   tinted?: boolean;
+  ctaHref?: string;
+  ctaLabel?: string;
 }
 
-export default function ProductGrid({ id, eyebrow, title, description, products, tinted }: ProductGridProps) {
+export default function ProductGrid({
+  id,
+  eyebrow,
+  title,
+  description,
+  products,
+  tinted,
+  ctaHref,
+  ctaLabel,
+}: ProductGridProps) {
   return (
     <section id={id} className={`py-16 sm:py-[90px] ${tinted ? 'bg-ivory' : ''}`}>
       <div className="max-w-[1280px] mx-auto px-5 sm:px-7">
@@ -26,6 +38,17 @@ export default function ProductGrid({ id, eyebrow, title, description, products,
             <ProductCard key={p.id} product={p} index={i} />
           ))}
         </Reveal>
+
+        {ctaHref && (
+          <div className="text-center mt-12">
+            <Link
+              to={ctaHref}
+              className="inline-block font-sans text-xs tracking-[0.2em] uppercase font-medium px-9 py-4 rounded-sm border border-wine/30 text-wine transition-all duration-300 hover:bg-wine hover:text-white hover:border-wine"
+            >
+              {ctaLabel ?? 'View all'}
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );

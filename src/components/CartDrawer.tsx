@@ -1,4 +1,5 @@
 import { X, ShoppingBag } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { formatINR } from '../lib/format';
 import { orderMessage, whatsappUrl } from '../lib/whatsapp';
@@ -74,14 +75,27 @@ export default function CartDrawer() {
               <span className="text-xs tracking-[0.18em] uppercase text-ink-soft">Subtotal</span>
               <b className="font-serif text-[32px] text-wine-deep font-semibold">{formatINR(subtotal)}</b>
             </div>
+            <Link
+              to="/cart"
+              onClick={closeCart}
+              className="w-full block text-center border border-wine text-wine text-[11px] tracking-[0.18em] uppercase font-semibold py-3 rounded-sm hover:bg-wine hover:text-white transition-colors mb-3"
+            >
+              View Cart
+            </Link>
+            <Link
+              to="/checkout"
+              onClick={closeCart}
+              className="btn btn-gold w-full text-center block"
+            >
+              Proceed to Checkout
+            </Link>
             <button
               onClick={checkout}
-              className="btn btn-gold w-full text-center flex items-center justify-center gap-2"
+              className="mt-3 w-full flex items-center justify-center gap-2 bg-[#25D366] text-white text-[11px] tracking-[0.18em] uppercase font-semibold py-3 rounded-sm hover:opacity-90 transition-opacity"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.7 14.9L2 22l5.3-1.4A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2s-1.2.2-3.7-.9a9.3 9.3 0 0 1-3.8-3.4c-.3-.5-1-1.6-1-3s.7-2.1 1-2.4c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6c-.2.2-.3.4-.1.7s.7 1.2 1.5 1.9c1 .9 1.8 1.1 2.1 1.3s.5.1.6-.1l.7-.9c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.4.3.1.2.1.8-.1 1.4z"/></svg>
-              Checkout on WhatsApp
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.7 14.9L2 22l5.3-1.4A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2s-1.2.2-3.7-.9a9.3 9.3 0 0 1-3.8-3.4c-.3-.5-1-1.6-1-3s.7-2.1 1-2.4c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6c-.2.2-.3.4-.1.7s.7 1.2 1.5 1.9c1 .9 1.8 1.1 2.1 1.3s.5.1.6-.1l.7-.9c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.4.3.1.2.1.8-.1 1.4z"/></svg>
+              Order on WhatsApp
             </button>
-            <p className="text-[10.5px] text-ink-soft text-center mt-2.5 font-light">Opens WhatsApp with your order ready to send</p>
           </div>
         )}
       </aside>

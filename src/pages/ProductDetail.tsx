@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ChevronRight, Minus, Plus, Check, Truck, Scissors, RotateCcw } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { useCart } from '../context/CartContext';
@@ -10,7 +10,8 @@ import { products } from '../data/products';
 
 export default function ProductDetail() {
   const { id } = useParams();
-  const { add, openCart } = useCart();
+  const { add } = useCart();
+  const navigate = useNavigate();
   const [qty, setQty] = useState(1);
 
   const product = products.find((p) => p.id === Number(id));
@@ -67,10 +68,20 @@ export default function ProductDetail() {
           </div>
           <p className="text-[12px] text-ink-soft mt-1.5 font-light">Inclusive of all taxes</p>
 
-          <p className="text-ink-soft text-[15px] leading-[1.8] mt-6 font-light">{description(product)}</p>
+          {/* Availability */}
+          <div className="flex items-center gap-2 mt-3">
+            <span className="text-[13px] text-ink-soft">Availability:</span>
+            <span className="inline-flex items-center gap-1.5 text-[13px] text-emerald-600 font-medium">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
+              In Stock
+            </span>
+          </div>
 
-          {/* quantity + actions */}
-          <div className="flex items-center gap-4 mt-8">
+          <p className="text-ink-soft text-[15px] leading-[1.8] mt-5 font-light">{description(product)}</p>
+
+          {/* Qty */}
+          <div className="flex items-center gap-3 mt-8">
+            <span className="text-[12px] tracking-[0.12em] uppercase text-ink-soft">Qty</span>
             <div className="inline-flex items-center border border-wine/20 rounded-sm">
               <button onClick={() => setQty((q) => Math.max(1, q - 1))} className="w-11 h-11 grid place-items-center text-wine" aria-label="Decrease">
                 <Minus size={15} />
@@ -80,14 +91,21 @@ export default function ProductDetail() {
                 <Plus size={15} />
               </button>
             </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-3 mt-4">
             <button
-              onClick={() => {
-                add(product, qty);
-                openCart();
-              }}
-              className="btn btn-gold flex-1 text-center"
+              onClick={() => add(product, qty)}
+              className="flex-1 border border-wine text-wine text-[11px] tracking-[0.18em] uppercase font-semibold py-3.5 rounded-sm hover:bg-wine hover:text-white transition-colors"
             >
-              Add to bag
+              Add to cart
+            </button>
+            <button
+              onClick={() => { add(product, qty); navigate('/checkout'); }}
+              className="flex-1 bg-wine-deep text-white text-[11px] tracking-[0.18em] uppercase font-semibold py-3.5 rounded-sm hover:bg-wine transition-colors"
+            >
+              Buy it now
             </button>
           </div>
 

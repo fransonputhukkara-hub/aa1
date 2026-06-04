@@ -9,6 +9,7 @@ import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Admin from './pages/Admin';
+import WhatsAppFloat from './components/WhatsAppFloat';
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
 
       <Footer />
       <CartDrawer />
+      <WhatsAppFloat />
     </>
   );
 }

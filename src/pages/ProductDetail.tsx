@@ -7,6 +7,7 @@ import { formatINR } from '../lib/format';
 import { description, specs } from '../lib/productInfo';
 import { singleItemMessage, whatsappUrl } from '../lib/whatsapp';
 import { useProducts } from '../lib/useProducts';
+import StickyCartBar from '../components/StickyCartBar';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -170,6 +171,8 @@ export default function ProductDetail() {
           </div>
         </div>
       )}
+
+      <StickyCartBar product={product} />
     </div>
   );
 }

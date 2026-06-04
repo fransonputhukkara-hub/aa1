@@ -3,17 +3,19 @@ import { useLocation } from 'react-router-dom';
 import Hero from '../components/Hero';
 import Marquee from '../components/Marquee';
 import Categories from '../components/Categories';
+import Bestsellers from '../components/Bestsellers';
 import ProductGrid from '../components/ProductGrid';
 import StorySplit from '../components/StorySplit';
 import Values from '../components/Values';
 import Testimonial from '../components/Testimonial';
+import InstagramFeed from '../components/InstagramFeed';
 import Newsletter from '../components/Newsletter';
-import { products } from '../data/products';
+import { useProducts } from '../lib/useProducts';
 
 export default function Home() {
   const { hash } = useLocation();
+  const { products } = useProducts();
 
-  // support /#story and /#cats deep links from the header
   useEffect(() => {
     if (hash) {
       const el = document.querySelector(hash);
@@ -24,11 +26,19 @@ export default function Home() {
   const cotton = products.filter((p) => p.type === 'Kalyani Cotton');
   const silk = products.filter((p) => p.type === 'Soft Silk');
 
+  // Bestsellers: pick products that have discounts (most popular) + newest
+  const bestsellers = [...products]
+    .filter((p) => p.mrp && p.mrp > p.price)
+    .sort((a, b) => (b.mrp! - b.price) - (a.mrp! - a.price))
+    .slice(0, 8);
+
   return (
     <>
       <Hero />
       <Marquee />
       <Categories />
+
+      <Bestsellers products={bestsellers} />
 
       <ProductGrid
         eyebrow="Most adored"
@@ -53,6 +63,7 @@ export default function Home() {
 
       <Values />
       <Testimonial />
+      <InstagramFeed />
       <Newsletter />
     </>
   );

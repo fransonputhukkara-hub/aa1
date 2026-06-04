@@ -26,16 +26,17 @@ export default function Header() {
         scrolled ? 'shadow-[0_4px_30px_rgba(106,27,45,0.08)]' : ''
       }`}
     >
-      <div className="max-w-[1280px] mx-auto px-5 sm:px-7 h-[78px] flex items-center justify-between">
+      <div className="max-w-[1280px] mx-auto px-5 sm:px-7 h-[80px] flex items-center justify-between">
         <button className="md:hidden text-ink hover:text-wine" aria-label="Menu">
           <Menu size={22} strokeWidth={1.6} />
         </button>
 
-        <Link to="/" className="font-serif text-[27px] font-semibold leading-none tracking-wide">
-          Sanskriti
-          <span className="block font-sans text-[9px] tracking-[0.5em] text-gold uppercase mt-[3px] font-medium">
-            Silks · Est. 1974
-          </span>
+        <Link to="/" className="flex items-center">
+          <img
+            src="/logo.png"
+            alt="A1 Sanskriti Silks"
+            className="h-[62px] w-auto object-contain"
+          />
         </Link>
 
         <nav className="hidden md:flex gap-8 text-[12.5px] tracking-[0.14em] uppercase">

@@ -9,8 +9,8 @@ interface CartContextValue {
   subtotal: number;
   toast: string | null;
   add: (product: Product, qty?: number) => void;
-  changeQty: (id: number, delta: number) => void;
-  remove: (id: number) => void;
+  changeQty: (id: string, delta: number) => void;
+  remove: (id: string) => void;
   clearCart: () => void;
   openCart: () => void;
   closeCart: () => void;
@@ -33,22 +33,27 @@ export function CartProvider({ children }: { children: ReactNode }) {
     (product: Product, qty: number = 1) => {
       setItems((prev) => {
         const existing = prev.find((i) => i.id === product.id);
-        if (existing)
-          return prev.map((i) => (i.id === product.id ? { ...i, qty: i.qty + qty } : i));
-        return [...prev, { ...product, qty }];
+        // Never let the bag exceed the live shared stock.
+        if (existing) {
+          const next = Math.min(existing.qty + qty, product.stock);
+          return prev.map((i) => (i.id === product.id ? { ...i, qty: next } : i));
+        }
+        return [...prev, { ...product, qty: Math.min(qty, product.stock) }];
       });
       notify(`${product.name} added to your bag`);
     },
     [notify],
   );
 
-  const changeQty = useCallback((id: number, delta: number) => {
+  const changeQty = useCallback((id: string, delta: number) => {
     setItems((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, qty: i.qty + delta } : i)).filter((i) => i.qty > 0),
+      prev
+        .map((i) => (i.id === id ? { ...i, qty: Math.min(i.qty + delta, i.stock) } : i))
+        .filter((i) => i.qty > 0),
     );
   }, []);
 
-  const remove = useCallback((id: number) => {
+  const remove = useCallback((id: string) => {
     setItems((prev) => prev.filter((i) => i.id !== id));
   }, []);
 

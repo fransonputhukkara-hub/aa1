@@ -4,6 +4,7 @@ import { ChevronRight, ChevronDown, ChevronUp, MapPin } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { formatINR } from '../lib/format';
 import { WHATSAPP_NUMBER } from '../lib/whatsapp';
+import { supabase } from '../lib/supabase';
 
 interface Address {
   pincode: string;
@@ -35,6 +36,7 @@ export default function Checkout() {
   const [addr, setAddr] = useState<Address>(EMPTY);
   const [orderOpen, setOrderOpen] = useState(true);
   const [errors, setErrors] = useState<Partial<Address>>({});
+  const [placing, setPlacing] = useState(false);
 
   const mrpTotal = items.reduce((s, i) => s + (i.mrp ?? i.price) * i.qty, 0);
 
@@ -55,9 +57,25 @@ export default function Checkout() {
     return Object.keys(e).length === 0;
   };
 
-  const placeOrder = () => {
+  const placeOrder = async () => {
     if (!validate()) return;
-    if (!items.length) return;
+    if (!items.length || placing) return;
+    setPlacing(true);
+
+    // Record the order in the shared POS database — this atomically
+    // lowers inventory stock, keeping website & store in sync.
+    const address = `${addr.addressLine}, ${addr.city}, ${addr.state} — ${addr.pincode} (${addr.type})`;
+    const { error } = await supabase.rpc('place_online_order', {
+      p_name: addr.fullName,
+      p_phone: addr.phone,
+      p_address: address,
+      p_items: items.map((i) => ({ id: i.id, name: i.name, qty: i.qty, rate: i.price })),
+    });
+    setPlacing(false);
+    if (error) {
+      alert('Could not place the order. Please try again or order via WhatsApp.');
+      return;
+    }
 
     const lines = items.map(
       (i) => `• ${i.name} (${i.type}) × ${i.qty} — ${formatINR(i.price * i.qty)}`,
@@ -313,7 +331,7 @@ export default function Checkout() {
                 onClick={placeOrder}
                 className="w-full bg-wine-deep text-white text-[11px] tracking-[0.2em] uppercase font-semibold py-3.5 rounded-sm hover:bg-wine transition-colors"
               >
-                PLACE ORDER
+                {placing ? 'PLACING…' : 'PLACE ORDER'}
               </button>
               <p className="text-[10px] text-ink-soft text-center mt-2 leading-relaxed">
                 Tracking will be shared via WhatsApp

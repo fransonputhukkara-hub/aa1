@@ -46,9 +46,9 @@ export default function CartDrawer() {
               </p>
             </div>
           ) : (
-            items.map((item) => (
+            items.map((item, idx) => (
               <div key={item.id} className="flex gap-4 py-5 border-b border-wine/10">
-                <div className={`w-[74px] h-24 rounded-sm overflow-hidden shrink-0 ${FALLBACKS[(item.id - 1) % 4]}`}>
+                <div className={`w-[74px] h-24 rounded-sm overflow-hidden shrink-0 ${FALLBACKS[idx % 4]}`}>
                   <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                 </div>
                 <div className="flex-1">

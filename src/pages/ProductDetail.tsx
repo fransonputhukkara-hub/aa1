@@ -16,7 +16,7 @@ export default function ProductDetail() {
   const [qty, setQty] = useState(1);
   const { products } = useProducts();
 
-  const product = products.find((p) => p.id === Number(id));
+  const product = products.find((p) => p.id === id);
 
   if (!product) {
     return (
@@ -79,7 +79,7 @@ export default function ProductDetail() {
             <span className="text-[13px] text-ink-soft">Availability:</span>
             <span className="inline-flex items-center gap-1.5 text-[13px] text-emerald-600 font-medium">
               <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
-              In Stock
+              {product.stock <= 5 ? `Only ${product.stock} left` : 'In Stock'}
             </span>
           </div>
 
@@ -93,7 +93,7 @@ export default function ProductDetail() {
                 <Minus size={15} />
               </button>
               <span className="w-10 text-center text-[15px]">{qty}</span>
-              <button onClick={() => setQty((q) => q + 1)} className="w-11 h-11 grid place-items-center text-wine" aria-label="Increase">
+              <button onClick={() => setQty((q) => Math.min(product.stock, q + 1))} className="w-11 h-11 grid place-items-center text-wine" aria-label="Increase">
                 <Plus size={15} />
               </button>
             </div>

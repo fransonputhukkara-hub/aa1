@@ -16,6 +16,7 @@ export default {
       fontFamily: {
         serif: ['"Cormorant Garamond"', 'serif'],
         sans: ['Jost', 'sans-serif'],
+        script: ['"Pinyon Script"', 'cursive'],
       },
       keyframes: {
         marquee: { '0%': { transform: 'translateX(0)' }, '100%': { transform: 'translateX(-50%)' } },

@@ -1,9 +1,19 @@
-import { WHATSAPP_NUMBER } from '../lib/whatsapp';
+import { useSiteContent } from '../lib/SiteContentContext';
 
 export default function WhatsAppFloat() {
+  const { content } = useSiteContent();
+  const layout = content.layout || { whatsapp: true };
+  const contact = content.contact || { whatsapp: "+91 88911 82501" };
+
+  if (layout.whatsapp === false) return null;
+
+  const rawNumber = contact.whatsapp || "+91 88911 82501";
+  // Strip all non-digit characters except maybe plus
+  const cleanNumber = rawNumber.replace(/[^\d+]/g, '');
+
   return (
     <a
-      href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hi A1 Sanskriti Silks! I have a query about your sarees.')}`}
+      href={`https://wa.me/${cleanNumber.replace('+', '')}?text=${encodeURIComponent('Hi A1 Sanskriti Silks! I have a query about your sarees.')}`}
       target="_blank"
       rel="noreferrer"
       className="fixed bottom-6 right-6 z-50 w-[56px] h-[56px] rounded-full bg-[#25D366] text-white shadow-[0_4px_20px_rgba(37,211,102,0.4)] grid place-items-center hover:scale-110 transition-transform duration-200"

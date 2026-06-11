@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { useProducts } from '../lib/useProducts';
+import { groupProducts } from '../lib/variants';
 import type { SareeType } from '../types';
 
 type FilterKey = 'all' | 'cotton' | 'silk';
@@ -18,6 +19,7 @@ export default function Shop() {
   const current = FILTERS.find((f) => f.key === active) ?? FILTERS[0];
 
   const list = current.type ? products.filter((p) => p.type === current.type) : products;
+  const groups = groupProducts(list);
 
   return (
     <section className="py-12 sm:py-16 min-h-[70vh]">
@@ -32,16 +34,13 @@ export default function Shop() {
           </p>
         </div>
 
-        {/* filter tabs */}
         <div className="flex justify-center gap-2 sm:gap-3 mb-10 flex-wrap">
           {FILTERS.map((f) => (
             <button
               key={f.key}
               onClick={() => setParams(f.key === 'all' ? {} : { type: f.key })}
               className={`font-sans text-[11.5px] sm:text-xs tracking-[0.16em] uppercase px-5 py-2.5 rounded-sm border transition-all ${
-                active === f.key
-                  ? 'bg-wine text-white border-wine'
-                  : 'bg-transparent text-ink-soft border-wine/20 hover:border-wine hover:text-wine'
+                active === f.key ? 'bg-wine text-white border-wine' : 'bg-transparent text-ink-soft border-wine/20 hover:border-wine hover:text-wine'
               }`}
             >
               {f.label}
@@ -50,7 +49,7 @@ export default function Shop() {
         </div>
 
         <p className="text-center text-[12px] tracking-[0.12em] uppercase text-ink-soft mb-8">
-          {loading ? 'Loading...' : `${list.length} ${list.length === 1 ? 'saree' : 'sarees'}`}
+          {loading ? 'Loading...' : `${groups.length} ${groups.length === 1 ? 'design' : 'designs'}`}
         </p>
 
         {loading ? (
@@ -61,8 +60,8 @@ export default function Shop() {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-[26px]">
-            {list.map((p, i) => (
-              <ProductCard key={p.id} product={p} index={i} />
+            {groups.map((g, i) => (
+              <ProductCard key={g.rep.id} product={g.rep} index={i} colors={g.colors} />
             ))}
           </div>
         )}

@@ -7,6 +7,7 @@ import { formatINR } from '../lib/format';
 import { description, specs } from '../lib/productInfo';
 import { singleItemMessage, whatsappUrl } from '../lib/whatsapp';
 import { useProducts } from '../lib/useProducts';
+import { variantsOf, colorHex } from '../lib/variants';
 import StickyCartBar from '../components/StickyCartBar';
 
 export default function ProductDetail() {
@@ -16,7 +17,11 @@ export default function ProductDetail() {
   const [qty, setQty] = useState(1);
   const { products } = useProducts();
 
-  const product = products.find((p) => p.id === id);
+  const initial = products.find((p) => p.id === id);
+  const variants = initial ? variantsOf(products, initial.group) : [];
+  const [activeId, setActiveId] = useState<string | null>(null);
+  // Selected colour variant (falls back to the URL one)
+  const product = variants.find((v) => v.id === activeId) ?? initial;
 
   if (!product) {
     return (
@@ -73,6 +78,32 @@ export default function ProductDetail() {
             )}
           </div>
           <p className="text-[12px] text-ink-soft mt-1.5 font-light">Inclusive of all taxes</p>
+
+          {variants.length > 1 && (
+            <div className="mt-6">
+              <div className="text-[12px] tracking-[0.12em] uppercase text-ink-soft mb-2.5">
+                Colour: <span className="text-ink font-medium">{product.color ?? '—'}</span>
+              </div>
+              <div className="flex flex-wrap gap-2.5">
+                {variants.map((v) => {
+                  const out = v.stock <= 0;
+                  const sel = v.id === product.id;
+                  return (
+                    <button
+                      key={v.id}
+                      onClick={() => { setActiveId(v.id); setQty(1); }}
+                      disabled={out}
+                      title={`${v.color ?? ''}${out ? ' (out of stock)' : ` — ${v.stock} left`}`}
+                      className={`relative w-9 h-9 rounded-full border-2 transition-all ${sel ? 'border-wine scale-110' : 'border-black/10 hover:border-wine/50'} ${out ? 'opacity-30 cursor-not-allowed' : ''}`}
+                      style={{ background: colorHex(v.color) }}
+                    >
+                      {out && <span className="absolute inset-0 grid place-items-center text-white text-[15px]">×</span>}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Availability */}
           <div className="flex items-center gap-2 mt-3">

@@ -1,13 +1,25 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { formatINR } from '../lib/format';
+import { colorHex } from '../lib/variants';
 import type { Product } from '../types';
 
 const FALLBACKS = ['silk', 's2', 's3', 's4'];
 
-export default function ProductCard({ product, index }: { product: Product; index: number }) {
+export default function ProductCard({
+  product,
+  index,
+  colors = [],
+}: {
+  product: Product;
+  index: number;
+  colors?: (string | null)[];
+}) {
   const { add } = useCart();
   const fb = FALLBACKS[index % FALLBACKS.length];
+  const multi = colors.length > 1;
+  // Card shows the style name (not the "- Red" suffix)
+  const title = product.group || product.name;
 
   return (
     <Link to={`/product/${product.id}`} className="group block cursor-pointer">
@@ -17,29 +29,38 @@ export default function ProductCard({ product, index }: { product: Product; inde
             New
           </span>
         )}
+        {multi && (
+          <span className="absolute top-3 right-3 z-[3] bg-wine-deep/90 text-white text-[9px] tracking-[0.12em] uppercase px-2.5 py-[5px] rounded-full font-semibold">
+            {colors.length} colours
+          </span>
+        )}
         <img
           src={product.image}
-          alt={product.name}
+          alt={title}
           loading="lazy"
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(.2,.7,.2,1)] group-hover:scale-105"
         />
         <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            add(product);
-          }}
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); add(product); }}
           className="absolute left-3 right-3 bottom-3 z-[3] bg-cream/95 text-wine-deep font-sans text-[11px] tracking-[0.18em] uppercase py-3 rounded-sm font-semibold opacity-0 translate-y-2.5 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 hover:!bg-wine hover:!text-white"
         >
-          Add to bag
+          {multi ? 'View colours' : 'Add to bag'}
         </button>
       </div>
       <div className="text-[10px] tracking-[0.22em] uppercase text-gold mb-1 font-medium">{product.type}</div>
-      <h3 className="text-[20px] font-medium leading-tight">{product.name}</h3>
+      <h3 className="text-[20px] font-medium leading-tight">{title}</h3>
       <div className="flex items-center gap-2.5 mt-1.5">
         <span className="text-[15px] font-medium text-ink">{formatINR(product.price)}</span>
         {product.mrp && <span className="text-[12.5px] text-ink-soft line-through">{formatINR(product.mrp)}</span>}
       </div>
+      {multi && (
+        <div className="flex items-center gap-1.5 mt-2">
+          {colors.slice(0, 6).map((c, i) => (
+            <span key={i} title={c ?? ''} className="w-3.5 h-3.5 rounded-full border border-black/10" style={{ background: colorHex(c) }} />
+          ))}
+          {colors.length > 6 && <span className="text-[10px] text-ink-soft">+{colors.length - 6}</span>}
+        </div>
+      )}
     </Link>
   );
 }
